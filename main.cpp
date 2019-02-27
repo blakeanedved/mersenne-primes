@@ -1,9 +1,12 @@
 #include <iostream>
+#include <fstream>
 #include <thread>
 #include <boost/multiprecision/gmp.hpp>
 namespace mp = boost::multiprecision;
 
 #define NUM_THREADS 8
+
+mp::mpz_int mpzint2 = mp::mpz_int(2);
 
 std::vector<bool> isFinished(NUM_THREADS, true);
 std::vector<bool> foundPrime(NUM_THREADS, false);
@@ -17,8 +20,15 @@ auto checkMersenneForPrime(int) -> bool;
 
 auto main() -> int {
 	
-	int currentNum = 11000;
-	currentNum--;
+	std::ifstream primes;
+	primes.open("primes.txt");
+
+	int startNum = 19000;
+	int currentNum;
+	while (true){
+		primes >> currentNum;
+		if (currentNum >= startNum) break;
+	}
 	bool searching = true;
 	int foundIndex;
 	std::vector<int> nums;
@@ -26,7 +36,8 @@ auto main() -> int {
 	std::vector<bool> done(NUM_THREADS, false);
 	
 	for (int i = 0; i < NUM_THREADS; i++){
-		nums.push_back(++currentNum);
+		if (i != 0) primes >> currentNum;
+		nums.push_back(currentNum);
 		threads.push_back(std::thread(checkMersenneForPrimeThreaded, currentNum, i));
 	}
 
@@ -40,7 +51,8 @@ auto main() -> int {
 					foundIndex = i;
 				}
 				if (searching){
-					nums[i] = ++currentNum;
+					primes >> currentNum;
+					nums[i] = currentNum;
 					threads[i] = std::thread(checkMersenneForPrimeThreaded, currentNum, i);
 					isFinished[i] = false;
 				}
@@ -60,7 +72,7 @@ inline auto nextLucasLehmer(mp::mpz_int a) -> mp::mpz_int {
 }
 
 auto checkMersenneForPrimeThreaded(int p, int my_id) -> void {
-	M[my_id] = mp::pow(mp::mpz_int(2), p) - 1;
+	M[my_id] = mp::pow(mpzint2, p) - 1;
 	L[my_id] = 4;
 
 	for (int i = 1; i < p - 1; i++){
