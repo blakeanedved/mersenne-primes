@@ -23,7 +23,11 @@ auto main() -> int {
 	std::ifstream primes;
 	primes.open("primes.txt");
 
-	int startNum = 19000;
+	int startNum;
+
+	std::cout << "What p (2^p-1) would you like to start at? >> ";
+	std::cin >> startNum;
+
 	int currentNum;
 	while (true){
 		primes >> currentNum;
