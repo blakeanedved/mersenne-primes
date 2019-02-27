@@ -15,3 +15,7 @@ This program uses c++17 standards and the `<boost/multiprecision/gmp.hpp>` heade
  ~ ./a.out
 ```
 Then enter the number which you would like to start from, and viola, the algorithm will take its time finding the next Mersenne Prime
+
+## Asciicast
+
+[![asciicast](https://asciinema.org/a/230134.svg)](https://asciinema.org/a/230134)
