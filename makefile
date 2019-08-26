@@ -1,6 +1,7 @@
-all:a.out
+all:main
 
-a.out:main.cpp
+main:main.cpp
+	rm a.out
 	g++ -std=c++17 main.cpp -lgmp -O3
 
 genprimes:generate-primes.cpp
