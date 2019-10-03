@@ -2,13 +2,15 @@
 #include <math.h>
 #include <thread>
 #include <mutex>
+#include <vector>
+#include <algorithm>
 
 #define NUM_THREADS 8
 
 int num;
-std::ofstream file;
 std::mutex num_mutex;
-std::mutex file_mutex;
+std::mutex vec_mutex;
+std::vector<int> primes;
 
 static auto check_prime_threaded() -> void {
 	bool isPrime;
@@ -30,14 +32,15 @@ static auto check_prime_threaded() -> void {
 			}
 
 		if (isPrime){
-			file_mutex.lock();
-			file << current_num << "\n";
-			file_mutex.unlock();
+			vec_mutex.lock();
+			primes.push_back(current_num);
+			vec_mutex.unlock();
 		}
 	}
 }
 
 auto main() -> int {
+	std::ofstream file;
 	file.open("primes.txt");
 
 	file << 2 << "\n";
@@ -54,7 +57,14 @@ auto main() -> int {
 		threads[i].join();
 	}
 
+	std::sort(primes.begin(), primes.end());
+
+	for (auto& p : primes){
+		file << p << '\n';
+	}
+
 	file.close();
+	primes.clear();
 
 	return 0;
 }
