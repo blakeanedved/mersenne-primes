@@ -1,8 +1,17 @@
+CC 		= g++
+CFLAGS 	= -std=c++17 -O3
+MTARGET = mersenne
+MSRC 	= main.cpp
+GTARGET = genprimes
+GSRC	= generate-primes.cpp
+
 all:main
 
-main:main.cpp
-	rm a.out
-	g++ -std=c++17 main.cpp -lgmp -O3
+main:clean genprimes main.cpp
+	$(CC) -o $(MTARGET) $(CFLAGS) -lgmp $(MSRC)
 
 genprimes:generate-primes.cpp
-	g++ -std=c++17 generate-primes.cpp -O3
+	$(CC) -o $(GTARGET) $(CFLAGS) $(GSRC)
+
+clean:
+	rm -rf $(GTARGET) $(MTARGET)
